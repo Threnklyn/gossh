@@ -607,7 +607,8 @@ func (t *Task) setDefaultSSHAuthMethods() {
 	}
 
 	if len(t.defaultIdentityFiles) != 0 {
-		sshSigners := getSigners(t.defaultIdentityFiles, t.configFlags.Auth.Passphrase, "")
+		passphrase := getRealPass(t.configFlags.Auth.Passphrase, "default", "passphrase")
+		sshSigners := getSigners(t.defaultIdentityFiles, passphrase, "")
 
 		if len(sshSigners) != 0 {
 			signers = append(signers, sshSigners...)
@@ -661,7 +662,8 @@ func (t *Task) getProxySSHAuthMethods() []ssh.AuthMethod {
 
 	proxyKeyfiles := parseItentityFiles(t.configFlags.Proxy.IdentityFiles)
 	if len(proxyKeyfiles) != 0 {
-		sshSigners := getSigners(proxyKeyfiles, t.configFlags.Proxy.Passphrase, "Proxy")
+		passphrase := getRealPass(t.configFlags.Proxy.Passphrase, "default", "proxy passphrase")
+		sshSigners := getSigners(proxyKeyfiles, passphrase, "Proxy")
 
 		if len(sshSigners) != 0 {
 			signers = append(signers, sshSigners...)
